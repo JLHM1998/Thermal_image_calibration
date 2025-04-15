@@ -4,6 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from rasterio.io import MemoryFile
 import datetime
+import plotly.express as px
+from fpdf import FPDF
+import folium
+from streamlit_folium import st_folium
 
 # Configuración de la página
 st.set_page_config(page_title="Calibración Térmica", layout="wide")
@@ -14,7 +18,7 @@ st.markdown("""
         @import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap');
 
         body {
-            background: linear-gradient(to bottom right, #1e3c72, #2a5298);
+            background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
             color: white;
             font-family: 'PT Serif', serif;
         }
@@ -42,7 +46,7 @@ st.markdown("""
         }
 
         .stButton > button {
-            background-color: #ffa500;
+            background-color: #1f6f8b;
             color: white;
             font-weight: bold;
             border-radius: 10px;
@@ -85,6 +89,19 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+    <style>
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 20px;
+            }
+            .stButton > button {
+                font-size: 14px;
+            }
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # Encabezado con logos y título alineados horizontalmente
 st.markdown("""
     <div style="display: flex; align-items: center; justify-content: space-between; background-color: #ffa500; padding: 10px 20px; border-radius: 10px;">
@@ -96,6 +113,27 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
+# Menú de navegación
+menu = st.sidebar.radio("Navegación", ["Inicio", "Subir Imagen", "Resultados", "Acerca de"])
+if menu == "Inicio":
+    st.markdown("### Bienvenido a la aplicación de calibración térmica")
+elif menu == "Subir Imagen":
+    st.markdown("### 📂 Subir tu imagen térmica (GeoTIFF)")
+elif menu == "Resultados":
+    st.markdown("### 🗾 Resultados de la calibración")
+elif menu == "Acerca de":
+    st.markdown("### Acerca de esta aplicación")
+
+st.sidebar.markdown("### Acerca de")
+st.sidebar.info("""
+Esta aplicación fue desarrollada por [Tu Nombre] para la calibración de imágenes térmicas.
+Tecnologías utilizadas:
+- Streamlit
+- Rasterio
+- Matplotlib
+- Plotly
+""")
+
 # --- Encabezado y descripción ---
 st.markdown("""
 ### Bienvenido a la aplicación de calibración térmica
@@ -103,6 +141,14 @@ Esta aplicación permite cargar un ortomosaico térmico, aplicar una **ecuación
 
 La calibración indirecta de las imágenes térmicas obtenidas por la cámara H20T se realizó comparándolas con los datos medidos con un radiómetro en nueve coberturas. Para reescalar los valores de temperatura en las imágenes térmicas, se utilizó un radiómetro Apogee MI-210 (MI-210; Apogee Instruments, Inc., Logan, UT, USA). Este radiómetro se utilizó en nueve coberturas conocidas, incluyendo aluminio, hojas secas, hojas verdes, poliestireno expandido, tela amarilla, tela negra, tela roja, tela verde y suelo desnudo.
 """)
+
+with st.expander("¿Cómo usar esta aplicación?"):
+    st.write("""
+    1. Selecciona la región, provincia y zona.
+    2. Sube tu imagen térmica en formato GeoTIFF.
+    3. Visualiza los resultados de la calibración.
+    4. Descarga la imagen calibrada o el reporte en PDF.
+    """)
 
 # --- Menús desplegables jerárquicos ---
 st.markdown("### 🗺️ Seleccionar información del vuelo")
@@ -193,50 +239,81 @@ st.markdown("### 📂 Subir tu imagen térmica (GeoTIFF)")
 uploaded_file = st.file_uploader("Selecciona tu archivo:", type=["tif", "tiff"])
 
 if uploaded_file is not None:
-    with rasterio.open(uploaded_file) as src:
-        profile = src.profile
-        image = src.read(1).astype(np.float32)
+    if not uploaded_file.name.endswith((".tif", ".tiff")):
+        st.error("Por favor, sube un archivo GeoTIFF válido.")
+    else:
+        st.success("Archivo cargado correctamente.")
+        with st.spinner("Procesando la imagen..."):
+            # Simula un tiempo de procesamiento
+            import time
+            time.sleep(2)
+        st.success("¡Imagen procesada con éxito!")
+        with rasterio.open(uploaded_file) as src:
+            profile = src.profile
+            image = src.read(1).astype(np.float32)
 
-    # Vista previa original
-    st.markdown("### 🗾 Vista Previa - Imagen Original")
-    image_clipped = np.clip(image, 0, 70)
-    vmin, vmax = np.percentile(image_clipped, [2, 98])
-    fig, ax = plt.subplots(figsize=(6, 4))
-    im = ax.imshow(image_clipped, cmap='inferno', vmin=vmin, vmax=vmax)
-    ax.axis('off')
-    cbar = fig.colorbar(im, ax=ax, label='Temperatura (°C)')
-    st.pyplot(fig)
+        # Vista previa original
+        st.markdown("### 🗾 Vista Previa - Imagen Original")
+        image_clipped = np.clip(image, 0, 70)
+        vmin, vmax = np.percentile(image_clipped, [2, 98])
+        fig, ax = plt.subplots(figsize=(6, 4))
+        im = ax.imshow(image_clipped, cmap='inferno', vmin=vmin, vmax=vmax)
+        ax.axis('off')
+        cbar = fig.colorbar(im, ax=ax, label='Temperatura (°C)')
+        st.pyplot(fig)
 
-    # Aplicar calibración
-    calibrated = A * image + B
-    calibrated = np.clip(calibrated, 0, 70)
+        # Aplicar calibración
+        calibrated = A * image + B
+        calibrated = np.clip(calibrated, 0, 70)
 
-    # Vista previa calibrada
-    st.markdown("### 🗾 Vista Previa - Imagen Calibrada")
-    vmin2, vmax2 = np.percentile(calibrated, [2, 98])
-    fig2, ax2 = plt.subplots(figsize=(6, 4))
-    im2 = ax2.imshow(calibrated, cmap='inferno', vmin=vmin2, vmax=vmax2)
-    ax2.axis('off')
-    cbar2 = fig2.colorbar(im2, ax=ax2, label='Temperatura Calibrada (°C)')
-    st.pyplot(fig2)
+        # Vista previa calibrada
+        st.markdown("### 🗾 Vista Previa - Imagen Calibrada")
+        vmin2, vmax2 = np.percentile(calibrated, [2, 98])
+        fig2, ax2 = plt.subplots(figsize=(6, 4))
+        im2 = ax2.imshow(calibrated, cmap='inferno', vmin=vmin2, vmax=vmax2)
+        ax2.axis('off')
+        cbar2 = fig2.colorbar(im2, ax=ax2, label='Temperatura Calibrada (°C)')
+        st.pyplot(fig2)
 
-    # Guardar como GeoTIFF
-    profile.update(dtype=rasterio.float32)
-    with MemoryFile() as memfile:
-        with memfile.open(**profile) as dst:
-            dst.write(calibrated.astype(rasterio.float32), 1)
-        mem_bytes = memfile.read()
+        # Gráfico interactivo
+        fig = px.imshow(calibrated, color_continuous_scale='inferno', title="Imagen Calibrada")
+        st.plotly_chart(fig)
 
-    # Botón de descarga
-    st.markdown("### 💾 Descargar Imagen Calibrada")
-    st.download_button("📥 Descargar TIFF Calibrado", data=mem_bytes,
-                       file_name=f"{zona}_{hora}_calibrada.tif", mime="image/tiff")
+        # Guardar como GeoTIFF
+        profile.update(dtype=rasterio.float32)
+        with MemoryFile() as memfile:
+            with memfile.open(**profile) as dst:
+                dst.write(calibrated.astype(rasterio.float32), 1)
+            mem_bytes = memfile.read()
+
+        # Botón de descarga
+        st.markdown("### 💾 Descargar Imagen Calibrada")
+        st.download_button("📥 Descargar TIFF Calibrado", data=mem_bytes,
+                           file_name=f"{zona}_{hora}_calibrada.tif", mime="image/tiff")
 else:
     st.info("Por favor, sube una imagen térmica para comenzar.")
 
+if st.button("Generar Reporte PDF"):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    pdf.cell(200, 10, txt="Reporte de Calibración", ln=True, align='C')
+    pdf.cell(200, 10, txt=f"Zona: {zona}", ln=True)
+    pdf.cell(200, 10, txt=f"Hora: {hora}", ln=True)
+    pdf.output("reporte_calibracion.pdf")
+    with open("reporte_calibracion.pdf", "rb") as file:
+        st.download_button("Descargar Reporte", file, "reporte_calibracion.pdf")
+
 # Pie de página
 st.markdown("""
-    <footer>
+    <footer style="text-align: center; padding: 10px; background-color: #1f6f8b; color: white; border-radius: 10px; margin-top: 50px;">
         © 2025 Universidad Nacional Agraria La Molina - Todos los derechos reservados.
+        <br>
+        Desarrollado por [Tu Nombre].
     </footer>
 """, unsafe_allow_html=True)
+
+# Mapa interactivo
+m = folium.Map(location=[-12.04318, -77.02824], zoom_start=10)
+folium.Marker([-12.04318, -77.02824], popup="La Molina").add_to(m)
+st_folium(m, width=700, height=500)
