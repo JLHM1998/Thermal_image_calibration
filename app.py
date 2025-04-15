@@ -81,6 +81,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# Título principal con estilo personalizado
+st.markdown("""
+    <h1 style="text-align: center; color: #ffa500; font-size: 40px;">
+        🔥 Calibración de Imágenes Térmicas
+    </h1>
+""", unsafe_allow_html=True)
+
 # --- Encabezado y descripción ---
 st.markdown("""
 Esta aplicación permite cargar un ortomosaico térmico, aplicar una **ecuación de calibración** y visualizar los resultados.
