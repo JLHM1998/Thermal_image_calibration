@@ -5,32 +5,11 @@ import matplotlib.pyplot as plt
 from rasterio.io import MemoryFile
 import datetime
 
-# Configuración de la página (debe ser el primer comando de Streamlit)
-st.set_page_config(page_title="Calibración Térmica", layout="centered")
+# Configuración de la página
+st.set_page_config(page_title="Calibración Térmica", layout="wide")
 
 # Estilos personalizados
 st.markdown("""
-    <style>
-        .logo-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            padding: 10px 30px;
-        }
-        .logo-container img {
-            height: 120px;
-        }
-    </style>
-
-    <div class="logo-container">
-        <img src="https://raw.githubusercontent.com/karofy/thermal_image_calibration/refs/heads/master/assets/856x973_ESCUDOCOLOR.png" alt="Left Logo">
-        <img src="https://raw.githubusercontent.com/karofy/thermal_image_calibration/refs/heads/master/assets/logo_TyC.png" alt="Right Logo">
-    </div>
-""", unsafe_allow_html=True)
-
-
-st.markdown(""" 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap');
 
@@ -40,10 +19,14 @@ st.markdown("""
             font-family: 'PT Serif', serif;
         }
 
-        h1 {
+        .main-header {
+            background-color: #ffa500;
+            padding: 20px;
+            border-radius: 10px;
             text-align: center;
-            color: #ffcc00;
-            font-size: 40px;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
         }
 
         .stButton > button {
@@ -52,6 +35,7 @@ st.markdown("""
             font-weight: bold;
             border-radius: 10px;
             font-family: 'PT Serif', serif;
+            padding: 10px 20px;
         }
 
         .stDownloadButton > button {
@@ -60,6 +44,7 @@ st.markdown("""
             font-weight: bold;
             border-radius: 10px;
             font-family: 'PT Serif', serif;
+            padding: 10px 20px;
         }
 
         .stNumberInput input {
@@ -78,25 +63,33 @@ st.markdown("""
             padding: 10px;
             border-radius: 10px;
         }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #ccc;
+        }
     </style>
 """, unsafe_allow_html=True)
 
-# Título principal con estilo personalizado
+# Encabezado principal
 st.markdown("""
-    <h1 style="text-align: center; color: #ffa500; font-size: 40px;">
+    <div class="main-header">
         🔥 Calibración de Imágenes Térmicas
-    </h1>
+    </div>
 """, unsafe_allow_html=True)
 
 # --- Encabezado y descripción ---
 st.markdown("""
+### Bienvenido a la aplicación de calibración térmica
 Esta aplicación permite cargar un ortomosaico térmico, aplicar una **ecuación de calibración** y visualizar los resultados.
 
 La calibración indirecta de las imágenes térmicas obtenidas por la cámara H20T se realizó comparándolas con los datos medidos con un radiómetro en nueve coberturas. Para reescalar los valores de temperatura en las imágenes térmicas, se utilizó un radiómetro Apogee MI-210 (MI-210; Apogee Instruments, Inc., Logan, UT, USA). Este radiómetro se utilizó en nueve coberturas conocidas, incluyendo aluminio, hojas secas, hojas verdes, poliestireno expandido, tela amarilla, tela negra, tela roja, tela verde y suelo desnudo.
 """)
 
 # --- Menús desplegables jerárquicos ---
-st.subheader("🗺️ Seleccionar información del vuelo")
+st.markdown("### 🗺️ Seleccionar información del vuelo")
 
 # Selección de región
 region = st.selectbox("🌎 Seleccionar Región", ["Lambayeque", "Lima"])
@@ -125,6 +118,7 @@ if zona:
     st.write(f"Zona seleccionada: {zona}")
 
 # --- Selección de hora ---
+st.markdown("### 🕒 Seleccionar hora del vuelo")
 horas_disponibles = [datetime.time(hour, 0) for hour in range(9, 16)]
 hora = st.selectbox("🕒 Hora del Vuelo (9:00 AM a 3:00 PM)", horas_disponibles)
 
@@ -179,7 +173,7 @@ A, B = ecuaciones.get((zona, hora), (1.0, 0.0))
 st.write(f"Coeficientes de calibración: A = {A}, B = {B}")
 
 # --- Subida de imagen ---
-st.subheader("📂 Subir tu imagen térmica (GeoTIFF)")
+st.markdown("### 📂 Subir tu imagen térmica (GeoTIFF)")
 uploaded_file = st.file_uploader("Selecciona tu archivo:", type=["tif", "tiff"])
 
 if uploaded_file is not None:
@@ -188,7 +182,7 @@ if uploaded_file is not None:
         image = src.read(1).astype(np.float32)
 
     # Vista previa original
-    st.subheader("🗾 Vista Previa - Imagen Original")
+    st.markdown("### 🗾 Vista Previa - Imagen Original")
     image_clipped = np.clip(image, 0, 70)
     vmin, vmax = np.percentile(image_clipped, [2, 98])
     fig, ax = plt.subplots(figsize=(6, 4))
@@ -202,7 +196,7 @@ if uploaded_file is not None:
     calibrated = np.clip(calibrated, 0, 70)
 
     # Vista previa calibrada
-    st.subheader("🗾 Vista Previa - Imagen Calibrada")
+    st.markdown("### 🗾 Vista Previa - Imagen Calibrada")
     vmin2, vmax2 = np.percentile(calibrated, [2, 98])
     fig2, ax2 = plt.subplots(figsize=(6, 4))
     im2 = ax2.imshow(calibrated, cmap='inferno', vmin=vmin2, vmax=vmax2)
@@ -218,8 +212,15 @@ if uploaded_file is not None:
         mem_bytes = memfile.read()
 
     # Botón de descarga
-    st.subheader("💾 Descargar Imagen Calibrada")
+    st.markdown("### 💾 Descargar Imagen Calibrada")
     st.download_button("📥 Descargar TIFF Calibrado", data=mem_bytes,
                        file_name=f"{zona}_{hora}_calibrada.tif", mime="image/tiff")
 else:
     st.info("Por favor, sube una imagen térmica para comenzar.")
+
+# Pie de página
+st.markdown("""
+    <footer>
+        © 2025 Universidad Nacional Agraria La Molina - Todos los derechos reservados.
+    </footer>
+""", unsafe_allow_html=True)
