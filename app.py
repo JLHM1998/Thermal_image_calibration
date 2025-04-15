@@ -5,49 +5,49 @@ import matplotlib.pyplot as plt
 from rasterio.io import MemoryFile
 import datetime
 
-st.set_page_config(page_title="Thermal Calibration", layout="centered")
+st.set_page_config(page_title="Calibración Térmica", layout="centered")
 
 # --- Encabezado y descripción ---
 st.markdown("""
-This app allows you to upload a thermal orthomosaic, apply a **calibration equation**, and visualize the results.
+Esta aplicación permite cargar un ortomosaico térmico, aplicar una **ecuación de calibración** y visualizar los resultados.
 
-The indirect calibration of the thermal images obtained by the H20T camera was performed by comparing them with the data measured with a radiometer in nine coverages. To rescale the temperature values in the thermal images, an Apogee MI-210 radiometer (MI-210; Apogee Instruments, Inc., Logan, UT, USA) was used. This radiometer was used on nine known coverslips, including aluminum, dry leaves, green leaves, expanded polystyrene, yellow cloth, black cloth, red cloth, green cloth, and bare soil.
+La calibración indirecta de las imágenes térmicas obtenidas por la cámara H20T se realizó comparándolas con los datos medidos con un radiómetro en nueve coberturas. Para reescalar los valores de temperatura en las imágenes térmicas, se utilizó un radiómetro Apogee MI-210 (MI-210; Apogee Instruments, Inc., Logan, UT, USA). Este radiómetro se utilizó en nueve coberturas conocidas, incluyendo aluminio, hojas secas, hojas verdes, poliestireno expandido, tela amarilla, tela negra, tela roja, tela verde y suelo desnudo.
 """)
 
 # --- Menús desplegables jerárquicos ---
-st.subheader("🗺️ Select flight info")
+st.subheader("🗺️ Seleccionar información del vuelo")
 
 # Selección de región
-region = st.selectbox("🌎 Select Region", ["Lambayeque", "Lima"])
+region = st.selectbox("🌎 Seleccionar Región", ["Lambayeque", "Lima"])
 
 # Inicializar variables
 provincia = distrito = zona = None
 
 # Opciones según la región seleccionada
 if region == "Lambayeque":
-    provincia = st.selectbox("📍 Select Province", ["Ferreñafe", "Chiclayo"])
+    provincia = st.selectbox("📍 Seleccionar Provincia", ["Ferreñafe", "Chiclayo"])
 
     if provincia == "Ferreñafe":
-        zona = st.selectbox("🗺️ Select Zone", ["Capote"])
+        zona = st.selectbox("🗺️ Seleccionar Zona", ["Capote"])
     elif provincia == "Chiclayo":
-        distrito = st.selectbox("🏙️ Select District", ["Chongoyape", "Picsi"])
+        distrito = st.selectbox("🏙️ Seleccionar Distrito", ["Chongoyape", "Picsi"])
 
         if distrito == "Chongoyape":
-            zona = st.selectbox("🗺️ Select Zone", ["Carniche", "Paredones"])
+            zona = st.selectbox("🗺️ Seleccionar Zona", ["Carniche", "Paredones"])
         elif distrito == "Picsi":
             zona = "Picsi"  # Selección directa
 elif region == "Lima":
-    zona = st.selectbox("📍 Select Zone", ["La Molina"])
+    zona = st.selectbox("📍 Seleccionar Zona", ["La Molina"])
 
 # Mostrar la selección final
 if zona:
-    st.write(f"Selected Zone: {zona}")
+    st.write(f"Zona seleccionada: {zona}")
 
 # --- Selección de hora ---
 horas_disponibles = [datetime.time(hour, 0) for hour in range(9, 16)]
-hora = st.selectbox("🕒 Flight Time (9:00 AM to 3:00 PM)", horas_disponibles)
+hora = st.selectbox("🕒 Hora del Vuelo (9:00 AM a 3:00 PM)", horas_disponibles)
 
-st.write(f"Selected flight time: {hora}")
+st.write(f"Hora seleccionada: {hora}")
 
 # --- Diccionario de ecuaciones ---
 ecuaciones = {
@@ -95,11 +95,11 @@ ecuaciones = {
 
 # --- Obtener coeficientes ---
 A, B = ecuaciones.get((zona, hora), (1.0, 0.0))
-st.write(f"Calibration coefficients: A = {A}, B = {B}")
+st.write(f"Coeficientes de calibración: A = {A}, B = {B}")
 
 # --- Subida de imagen ---
-st.subheader("📂 Upload your thermal image (GeoTIFF)")
-uploaded_file = st.file_uploader("Select your file:", type=["tif", "tiff"])
+st.subheader("📂 Subir tu imagen térmica (GeoTIFF)")
+uploaded_file = st.file_uploader("Selecciona tu archivo:", type=["tif", "tiff"])
 
 if uploaded_file is not None:
     with rasterio.open(uploaded_file) as src:
@@ -107,13 +107,13 @@ if uploaded_file is not None:
         image = src.read(1).astype(np.float32)
 
     # Vista previa original
-    st.subheader("🗾 Preview - Original Image")
+    st.subheader("🗾 Vista Previa - Imagen Original")
     image_clipped = np.clip(image, 0, 70)
     vmin, vmax = np.percentile(image_clipped, [2, 98])
     fig, ax = plt.subplots(figsize=(6, 4))
     im = ax.imshow(image_clipped, cmap='inferno', vmin=vmin, vmax=vmax)
     ax.axis('off')
-    cbar = fig.colorbar(im, ax=ax, label='Temperature (°C)')
+    cbar = fig.colorbar(im, ax=ax, label='Temperatura (°C)')
     st.pyplot(fig)
 
     # Aplicar calibración
@@ -121,12 +121,12 @@ if uploaded_file is not None:
     calibrated = np.clip(calibrated, 0, 70)
 
     # Vista previa calibrada
-    st.subheader("🗾 Preview - Calibrated Image")
+    st.subheader("🗾 Vista Previa - Imagen Calibrada")
     vmin2, vmax2 = np.percentile(calibrated, [2, 98])
     fig2, ax2 = plt.subplots(figsize=(6, 4))
     im2 = ax2.imshow(calibrated, cmap='inferno', vmin=vmin2, vmax=vmax2)
     ax2.axis('off')
-    cbar2 = fig2.colorbar(im2, ax=ax2, label='Calibrated Temperature (°C)')
+    cbar2 = fig2.colorbar(im2, ax=ax2, label='Temperatura Calibrada (°C)')
     st.pyplot(fig2)
 
     # Guardar como GeoTIFF
@@ -137,8 +137,8 @@ if uploaded_file is not None:
         mem_bytes = memfile.read()
 
     # Botón de descarga
-    st.subheader("💾 Download Calibrated Image")
-    st.download_button("📥 Download Calibrated TIFF", data=mem_bytes,
-                       file_name=f"{zona}_{hora}_calibrated.tif", mime="image/tiff")
+    st.subheader("💾 Descargar Imagen Calibrada")
+    st.download_button("📥 Descargar TIFF Calibrado", data=mem_bytes,
+                       file_name=f"{zona}_{hora}_calibrada.tif", mime="image/tiff")
 else:
-    st.info("Please upload a thermal image to begin.")
+    st.info("Por favor, sube una imagen térmica para comenzar.")
