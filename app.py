@@ -126,7 +126,7 @@ elif menu == "Acerca de":
 
 st.sidebar.markdown("### Acerca de")
 st.sidebar.info("""
-Esta aplicación fue desarrollada por [Tu Nombre] para la calibración de imágenes térmicas.
+Esta aplicación fue desarrollada por el Área Experimental de Riego para la calibración de imágenes térmicas.
 Tecnologías utilizadas:
 - Streamlit
 - Rasterio
@@ -147,7 +147,7 @@ with st.expander("¿Cómo usar esta aplicación?"):
     1. Selecciona la región, provincia y zona.
     2. Sube tu imagen térmica en formato GeoTIFF.
     3. Visualiza los resultados de la calibración.
-    4. Descarga la imagen calibrada o el reporte en PDF.
+    4. Descarga la imagen calibrada.
     """)
 
 # --- Menús desplegables jerárquicos ---
