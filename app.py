@@ -114,38 +114,46 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Menú de navegación con enlaces anclados
-menu = st.sidebar.radio("Navegación", ["Inicio", "Subir Imagen", "Resultados", "Acerca de"])
+menu = st.sidebar.radio("Navegación", [
+    "Inicio", 
+    "Seleccionar información del vuelo", 
+    "Subir Imagen", 
+    "Resultados", 
+    "Acerca de"
+])
 
+# Redirigir a la sección correspondiente según la selección del menú
 if menu == "Inicio":
     st.markdown("<a id='inicio'></a>", unsafe_allow_html=True)
     st.markdown("### Bienvenido a la aplicación de calibración térmica")
+    st.markdown("""
+    Esta aplicación permite cargar un ortomosaico térmico, aplicar una **ecuación de calibración** y visualizar los resultados.
+    """)
+elif menu == "Seleccionar información del vuelo":
+    st.markdown("<a id='seleccionar-informacion'></a>", unsafe_allow_html=True)
+    st.markdown("### 🗺️ Seleccionar información del vuelo")
+    # Aquí va el contenido de la sección "Seleccionar información del vuelo"
 elif menu == "Subir Imagen":
     st.markdown("<a id='subir-imagen'></a>", unsafe_allow_html=True)
     st.markdown("### 📂 Subir tu imagen térmica (GeoTIFF)")
+    # Aquí va el contenido de la sección "Subir Imagen"
 elif menu == "Resultados":
     st.markdown("<a id='resultados'></a>", unsafe_allow_html=True)
     st.markdown("### 🗾 Resultados de la calibración")
+    # Aquí va el contenido de la sección "Resultados"
 elif menu == "Acerca de":
     st.markdown("<a id='acerca-de'></a>", unsafe_allow_html=True)
     st.markdown("### Acerca de esta aplicación")
+    st.markdown("""
+    Esta aplicación fue desarrollada por el Área Experimental de Riego (AER) para la calibración de imágenes térmicas.
+    """)
 
-st.sidebar.markdown("### Acerca de")
-st.sidebar.info("""
-Esta aplicación fue desarrollada por el Área Experimental de Riego (AER) para la calibración de imágenes térmicas.
-Tecnologías utilizadas:
-- Streamlit
-- Rasterio
-- Matplotlib
-- Plotly
-""")
-
-# --- Encabezado y descripción ---
+# --- Secciones con anclajes ---
+# Inicio
 st.markdown("<a id='inicio'></a>", unsafe_allow_html=True)
 st.markdown("### Bienvenido a la aplicación de calibración térmica")
 st.markdown("""
 Esta aplicación permite cargar un ortomosaico térmico, aplicar una **ecuación de calibración** y visualizar los resultados.
-
-La calibración indirecta de las imágenes térmicas obtenidas por la cámara H20T se realizó comparándolas con los datos medidos con un radiómetro en nueve coberturas. Para reescalar los valores de temperatura en las imágenes térmicas, se utilizó un radiómetro Apogee MI-210 (MI-210; Apogee Instruments, Inc., Logan, UT, USA). Este radiómetro se utilizó en nueve coberturas conocidas, incluyendo aluminio, hojas secas, hojas verdes, poliestireno expandido, tela amarilla, tela negra, tela roja, tela verde y suelo desnudo.
 """)
 
 with st.expander("¿Cómo usar esta aplicación?"):
