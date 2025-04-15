@@ -233,7 +233,6 @@ ecuaciones = {
 # --- Obtener coeficientes ---
 A, B = ecuaciones.get((zona, hora), (1.0, 0.0))
 
-
 # --- Subida de imagen ---
 st.markdown("### 📂 Subir tu imagen térmica (GeoTIFF)")
 uploaded_file = st.file_uploader("Selecciona tu archivo:", type=["tif", "tiff"])
@@ -293,23 +292,12 @@ if uploaded_file is not None:
 else:
     st.info("Por favor, sube una imagen térmica para comenzar.")
 
-if st.button("Generar Reporte PDF"):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-    pdf.cell(200, 10, txt="Reporte de Calibración", ln=True, align='C')
-    pdf.cell(200, 10, txt=f"Zona: {zona}", ln=True)
-    pdf.cell(200, 10, txt=f"Hora: {hora}", ln=True)
-    pdf.output("reporte_calibracion.pdf")
-    with open("reporte_calibracion.pdf", "rb") as file:
-        st.download_button("Descargar Reporte", file, "reporte_calibracion.pdf")
-
 # Pie de página
 st.markdown("""
     <footer style="text-align: center; padding: 10px; background-color: #1f6f8b; color: white; border-radius: 10px; margin-top: 50px;">
         © 2025 Universidad Nacional Agraria La Molina - Todos los derechos reservados.
         <br>
-        Desarrollado por [Tu Nombre].
+        Desarrollado por el Área Experimental de Riego.
     </footer>
 """, unsafe_allow_html=True)
 
