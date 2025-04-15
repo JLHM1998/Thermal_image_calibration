@@ -126,7 +126,7 @@ elif menu == "Acerca de":
 
 st.sidebar.markdown("### Acerca de")
 st.sidebar.info("""
-Esta aplicación fue desarrollada por el Área Experimental de Riego para la calibración de imágenes térmicas.
+Esta aplicación fue desarrollada por el Área Experimental de Riego (AER) para la calibración de imágenes térmicas.
 Tecnologías utilizadas:
 - Streamlit
 - Rasterio
@@ -297,11 +297,6 @@ st.markdown("""
     <footer style="text-align: center; padding: 10px; background-color: #1f6f8b; color: white; border-radius: 10px; margin-top: 50px;">
         © 2025 Universidad Nacional Agraria La Molina - Todos los derechos reservados.
         <br>
-        Desarrollado por el Área Experimental de Riego.
+        Desarrollado por el Área Experimental de Riego - AER.
     </footer>
 """, unsafe_allow_html=True)
-
-# Mapa interactivo
-m = folium.Map(location=[-12.04318, -77.02824], zoom_start=10)
-folium.Marker([-12.04318, -77.02824], popup="La Molina").add_to(m)
-st_folium(m, width=700, height=550)
