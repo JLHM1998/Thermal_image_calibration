@@ -113,15 +113,20 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Menú de navegación
+# Menú de navegación con enlaces anclados
 menu = st.sidebar.radio("Navegación", ["Inicio", "Subir Imagen", "Resultados", "Acerca de"])
+
 if menu == "Inicio":
+    st.markdown("<a id='inicio'></a>", unsafe_allow_html=True)
     st.markdown("### Bienvenido a la aplicación de calibración térmica")
 elif menu == "Subir Imagen":
+    st.markdown("<a id='subir-imagen'></a>", unsafe_allow_html=True)
     st.markdown("### 📂 Subir tu imagen térmica (GeoTIFF)")
 elif menu == "Resultados":
+    st.markdown("<a id='resultados'></a>", unsafe_allow_html=True)
     st.markdown("### 🗾 Resultados de la calibración")
 elif menu == "Acerca de":
+    st.markdown("<a id='acerca-de'></a>", unsafe_allow_html=True)
     st.markdown("### Acerca de esta aplicación")
 
 st.sidebar.markdown("### Acerca de")
@@ -135,8 +140,9 @@ Tecnologías utilizadas:
 """)
 
 # --- Encabezado y descripción ---
+st.markdown("<a id='inicio'></a>", unsafe_allow_html=True)
+st.markdown("### Bienvenido a la aplicación de calibración térmica")
 st.markdown("""
-### Bienvenido a la aplicación de calibración térmica
 Esta aplicación permite cargar un ortomosaico térmico, aplicar una **ecuación de calibración** y visualizar los resultados.
 
 La calibración indirecta de las imágenes térmicas obtenidas por la cámara H20T se realizó comparándolas con los datos medidos con un radiómetro en nueve coberturas. Para reescalar los valores de temperatura en las imágenes térmicas, se utilizó un radiómetro Apogee MI-210 (MI-210; Apogee Instruments, Inc., Logan, UT, USA). Este radiómetro se utilizó en nueve coberturas conocidas, incluyendo aluminio, hojas secas, hojas verdes, poliestireno expandido, tela amarilla, tela negra, tela roja, tela verde y suelo desnudo.
@@ -234,6 +240,7 @@ ecuaciones = {
 A, B = ecuaciones.get((zona, hora), (1.0, 0.0))
 
 # --- Subida de imagen ---
+st.markdown("<a id='subir-imagen'></a>", unsafe_allow_html=True)
 st.markdown("### 📂 Subir tu imagen térmica (GeoTIFF)")
 uploaded_file = st.file_uploader("Selecciona tu archivo:", type=["tif", "tiff"])
 
@@ -293,6 +300,18 @@ else:
     st.info("Por favor, sube una imagen térmica para comenzar.")
 
 # Pie de página
+st.markdown("<a id='resultados'></a>", unsafe_allow_html=True)
+st.markdown("### 🗾 Resultados de la calibración")
+st.markdown("""
+Visualiza los resultados de la calibración térmica aplicada a tu imagen.
+""")
+
+st.markdown("<a id='acerca-de'></a>", unsafe_allow_html=True)
+st.markdown("### Acerca de esta aplicación")
+st.markdown("""
+Esta aplicación fue desarrollada por el Área Experimental de Riego (AER) para la calibración de imágenes térmicas.
+""")
+
 st.markdown("""
     <footer style="text-align: center; padding: 10px; background-color: #1f6f8b; color: white; border-radius: 10px; margin-top: 50px;">
         © 2025 Universidad Nacional Agraria La Molina - Todos los derechos reservados.
