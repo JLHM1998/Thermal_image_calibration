@@ -29,6 +29,18 @@ st.markdown("""
             font-weight: bold;
         }
 
+        .logo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px 30px;
+        }
+
+        .logo-container img {
+            height: 120px;
+        }
+
         .stButton > button {
             background-color: #ffa500;
             color: white;
@@ -73,7 +85,15 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Encabezado principal
+# Encabezado con logos
+st.markdown("""
+    <div class="logo-container">
+        <img src="https://raw.githubusercontent.com/JLHM1998/thermal_image_calibration/master/assets/856x973_ESCUDOCOLOR.png" alt="Logo Izquierdo">
+        <img src="https://raw.githubusercontent.com/JLHM1998/thermal_image_calibration/master/assets/logo_TyC.png" alt="Logo Derecho">
+    </div>
+""", unsafe_allow_html=True)
+
+# Título principal
 st.markdown("""
     <div class="main-header">
         🔥 Calibración de Imágenes Térmicas
