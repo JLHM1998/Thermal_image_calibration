@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 from rasterio.io import MemoryFile
 import datetime
 
-st.set_page_config(page_title="Thermal Calibration", layout="centered")
+# Configuración de la página (debe ser el primer comando de Streamlit)
+st.set_page_config(page_title="Calibración Térmica", layout="centered")
 
 # Estilos personalizados
 st.markdown("""
@@ -79,8 +80,6 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-
-st.set_page_config(page_title="Calibración Térmica", layout="centered")
 
 # --- Encabezado y descripción ---
 st.markdown("""
