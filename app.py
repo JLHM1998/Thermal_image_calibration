@@ -85,18 +85,14 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Encabezado con logos
+# Encabezado con logos y título alineados horizontalmente
 st.markdown("""
-    <div class="logo-container">
-        <img src="https://raw.githubusercontent.com/JLHM1998/thermal_image_calibration/master/assets/856x973_ESCUDOCOLOR.png" alt="Logo Izquierdo">
-        <img src="https://raw.githubusercontent.com/JLHM1998/thermal_image_calibration/master/assets/logo_TyC.png" alt="Logo Derecho">
-    </div>
-""", unsafe_allow_html=True)
-
-# Título principal
-st.markdown("""
-    <div class="main-header">
-        🔥 Calibración de Imágenes Térmicas
+    <div style="display: flex; align-items: center; justify-content: space-between; background-color: #ffa500; padding: 10px 20px; border-radius: 10px;">
+        <img src="https://raw.githubusercontent.com/JLHM1998/thermal_image_calibration/master/assets/856x973_ESCUDOCOLOR.png" alt="Logo Izquierdo" style="height: 80px;">
+        <h1 style="color: white; text-align: center; margin: 0; font-size: 24px; font-family: 'PT Serif', serif;">
+            🔥 Calibración de Imágenes Térmicas
+        </h1>
+        <img src="https://raw.githubusercontent.com/JLHM1998/thermal_image_calibration/master/assets/logo_TyC.png" alt="Logo Derecho" style="height: 80px;">
     </div>
 """, unsafe_allow_html=True)
 
@@ -190,7 +186,7 @@ ecuaciones = {
 
 # --- Obtener coeficientes ---
 A, B = ecuaciones.get((zona, hora), (1.0, 0.0))
-st.write(f"Coeficientes de calibración: A = {A}, B = {B}")
+
 
 # --- Subida de imagen ---
 st.markdown("### 📂 Subir tu imagen térmica (GeoTIFF)")
