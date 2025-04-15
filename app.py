@@ -316,4 +316,4 @@ st.markdown("""
 # Mapa interactivo
 m = folium.Map(location=[-12.04318, -77.02824], zoom_start=10)
 folium.Marker([-12.04318, -77.02824], popup="La Molina").add_to(m)
-st_folium(m, width=700, height=500)
+st_folium(m, width=700, height=550)
