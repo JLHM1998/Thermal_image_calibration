@@ -5,6 +5,81 @@ import matplotlib.pyplot as plt
 from rasterio.io import MemoryFile
 import datetime
 
+st.set_page_config(page_title="Thermal Calibration", layout="centered")
+
+# Estilos personalizados
+st.markdown("""
+    <style>
+        .logo-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px 30px;
+        }
+        .logo-container img {
+            height: 120px;
+        }
+    </style>
+
+    <div class="logo-container">
+        <img src="https://raw.githubusercontent.com/karofy/thermal_image_calibration/refs/heads/master/assets/856x973_ESCUDOCOLOR.png" alt="Left Logo">
+        <img src="https://raw.githubusercontent.com/karofy/thermal_image_calibration/refs/heads/master/assets/logo_TyC.png" alt="Right Logo">
+    </div>
+""", unsafe_allow_html=True)
+
+
+st.markdown(""" 
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap');
+
+        body {
+            background: linear-gradient(to bottom right, #1e3c72, #2a5298);
+            color: white;
+            font-family: 'PT Serif', serif;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffcc00;
+            font-size: 40px;
+        }
+
+        .stButton > button {
+            background-color: #ffa500;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px;
+            font-family: 'PT Serif', serif;
+        }
+
+        .stDownloadButton > button {
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px;
+            font-family: 'PT Serif', serif;
+        }
+
+        .stNumberInput input {
+            background-color: #f0f0f0;
+            color: #333;
+            font-family: 'PT Serif', serif;
+        }
+
+        h2, h3, .stMarkdown {
+            color: #f0f0f0;
+            font-family: 'PT Serif', serif;
+        }
+
+        .stFileUploader {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 st.set_page_config(page_title="Calibración Térmica", layout="centered")
 
 # --- Encabezado y descripción ---
