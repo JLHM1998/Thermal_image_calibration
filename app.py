@@ -118,13 +118,13 @@ st.write(f"Hora seleccionada: {hora}")
 # --- Diccionario de ecuaciones ---
 ecuaciones = {
     # Capote (Ferreñafe)
-    ("Capote", datetime.time(9, 0)): (0.6341, 11.887),
-    ("Capote", datetime.time(10, 0)): (0.8746, 12.76),
-    ("Capote", datetime.time(11, 0)): (0.7291, 10.592),
-    ("Capote", datetime.time(12, 0)): (0.7134, 11.998),
-    ("Capote", datetime.time(13, 0)): (0.7134, 11.998),
-    ("Capote", datetime.time(14, 0)): (0.8000, 12.500),
-    ("Capote", datetime.time(15, 0)): (0.8500, 13.000),
+    ("Capote", datetime.time(9, 0)): (0.8700, 9.500),
+    ("Capote", datetime.time(10, 0)): (0.9000, 9.800),
+    ("Capote", datetime.time(11, 0)): (0.9150, 9.950),
+    ("Capote", datetime.time(12, 0)): (0.9244, 10.019),
+    ("Capote", datetime.time(13, 0)): (0.9150, 9.950),
+    ("Capote", datetime.time(14, 0)): (0.9000, 9.800),
+    ("Capote", datetime.time(15, 0)): (0.8700, 9.500),
     # Paredones (Chongoyape)
     ("Paredones", datetime.time(9, 0)): (0.85, 10.5),
     ("Paredones", datetime.time(10, 0)): (0.88, 11.2),
@@ -142,21 +142,21 @@ ecuaciones = {
     ("Carniche", datetime.time(14, 0)): (0.96, 12.3),
     ("Carniche", datetime.time(15, 0)): (0.98, 12.7),
     # Picsi
-    ("Picsi", datetime.time(9, 0)): (0.6638, 12.615),
-    ("Picsi", datetime.time(10, 0)): (0.6700, 12.700),
-    ("Picsi", datetime.time(11, 0)): (0.6800, 12.800),
-    ("Picsi", datetime.time(12, 0)): (0.6900, 12.900),
-    ("Picsi", datetime.time(13, 0)): (0.7000, 13.000),
-    ("Picsi", datetime.time(14, 0)): (0.7100, 13.100),
-    ("Picsi", datetime.time(15, 0)): (0.7200, 13.200),
+    ("Picsi", datetime.time(9, 0)): (0.6980, 8.520),
+    ("Picsi", datetime.time(10, 0)): (0.7050, 8.630),
+    ("Picsi", datetime.time(11, 0)): (0.7100, 8.700),
+    ("Picsi", datetime.time(12, 0)): (0.7139, 8.7325),
+    ("Picsi", datetime.time(13, 0)): (0.7100, 8.700),
+    ("Picsi", datetime.time(14, 0)): (0.7050, 8.630),
+    ("Picsi", datetime.time(15, 0)): (0.6980, 8.520),
     # La Molina
-    ("La Molina", datetime.time(9, 0)): (0.7134, 11.998),
-    ("La Molina", datetime.time(10, 0)): (0.7200, 12.100),
-    ("La Molina", datetime.time(11, 0)): (0.7300, 12.200),
-    ("La Molina", datetime.time(12, 0)): (0.7400, 12.300),
-    ("La Molina", datetime.time(13, 0)): (0.7500, 12.400),
-    ("La Molina", datetime.time(14, 0)): (0.7600, 12.500),
-    ("La Molina", datetime.time(15, 0)): (0.7700, 12.600),
+    ("La Molina", datetime.time(9, 0)): (0.7130, 10.350),
+    ("La Molina", datetime.time(10, 0)): (0.7180, 10.450),
+    ("La Molina", datetime.time(11, 0)): (0.7240, 10.520),
+    ("La Molina", datetime.time(12, 0)): (0.7291, 10.592),
+    ("La Molina", datetime.time(13, 0)): (0.7240, 10.520),
+    ("La Molina", datetime.time(14, 0)): (0.7180, 10.450),
+    ("La Molina", datetime.time(15, 0)): (0.7130, 10.350),
 }
 # --- Obtener coeficientes ---
 A, B = ecuaciones.get((zona, hora), (1.0, 0.0))
